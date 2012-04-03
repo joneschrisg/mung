@@ -1,0 +1,94 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <title>Mung</title>
+  <style>
+html, body {
+  width: 100%;
+  background-color: black;
+}
+
+div.paddle {
+  position: absolute;
+  top: 3mozmm;
+  width: 8mozmm;
+  height: 16mozmm;
+  background-color: white;
+}
+
+div#leftPaddle {
+  left: 3mozmm;
+}
+
+div#rightPaddle {
+  right: 3mozmm;
+}
+
+div#ball {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3mozmm;
+  height: 3mozmm;
+  border-radius: 3mozmm;
+  background-color: white;
+}
+  </style>
+
+  <script>
+function animationNow() {
+  return window.mozAnimationStartTime;
+}
+function raf(fn) {
+  mozRequestAnimationFrame(fn);
+}
+
+function Rect(x, y, w, h) {
+  this.x = x || 0;
+  this.y = y || 0;
+  this.w = w || 0;
+  this.h = h || 0;
+}
+function Ball() {
+  this.rect = new Rect();
+}
+function Paddle() {
+  this.rect = new Rect();
+}
+var b = new Ball();
+var lp = new Paddle(), rp = new Paddle();
+var w = new Rect();
+
+function draw() {
+  sample(animationNow());
+}
+
+function sample() {
+
+}
+
+function setUpBoard() {
+  w.x = 0;
+  w.y = 0;
+  w.width = window.innerWidth;
+  w.height = window.innerHeight;
+}
+
+window.onload = function() {
+  setUpBoard();
+  raf(draw);
+};
+window.onresize = setUpBoard;
+  </script>
+</head>
+
+<body>
+  <!-- This game wants to be in landscape.  If it's not, it might not
+       be much fun.  Caveat emptor. -->
+  <div id="leftPaddle" class="paddle"></div>
+  <div id="ball"></div>
+  <div id="rightPaddle" class="paddle"></div>
+</body>
+
+</html>
