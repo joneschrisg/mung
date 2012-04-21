@@ -6,29 +6,58 @@
   <style>
 html, body {
   width: 100%;
+  height: 100%;
   background-color: black;
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  position: absolute;
+}
+
+div.goalIndicator {
+  top: 0;
+  background-color: red;
+  opacity: 0.0;
+  width: 7mozmm;
+  height: 100%;
+}
+
+@-moz-keyframes score {
+  from { opacity: 1.0; }
+  to   { opacity: 0.0; }
+}
+
+div.paddleTrack {
+  top: 3mozmm;
+  width: 8mozmm;
+  height: -moz-calc(100% - 3mozmm);
 }
 
 div.paddle {
-  position: absolute;
-  top: 3mozmm;
-  width: 8mozmm;
+  width: 100%;
   height: 16mozmm;
   background-color: white;
 }
 
-div#leftPaddle {
-  left: 3mozmm;
+div#leftGoalIndicator {
+  left: 0;
+}
+div#leftPaddleTrack {
+  left: 7mozmm;
 }
 
-div#rightPaddle {
-  right: 3mozmm;
+div#rightGoalIndicator {
+  right: 0;
+}
+div#rightPaddleTrack {
+  right: 7mozmm;
 }
 
 div#ball {
-  position: absolute;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
   width: 3mozmm;
   height: 3mozmm;
   border-radius: 3mozmm;
@@ -37,47 +66,45 @@ div#ball {
   </style>
 
   <script>
-function animationNow() {
-  return window.mozAnimationStartTime;
-}
-function raf(fn) {
-  mozRequestAnimationFrame(fn);
-}
+var b;
+var lp, rp;
+var paddleHeight;
 
-function Rect(x, y, w, h) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.w = w || 0;
-  this.h = h || 0;
-}
 function Ball() {
-  this.rect = new Rect();
-}
-function Paddle() {
-  this.rect = new Rect();
-}
-var b = new Ball();
-var lp = new Paddle(), rp = new Paddle();
-var w = new Rect();
-
-function draw() {
-  sample(animationNow());
+  this.cx = 0;
+  this.cy = 0;
+  this.speed = 0;
+  this.theta = 0;  // radians
+  this.elt = null;
 }
 
-function sample() {
+Ball.prototype = {
+  
+};
 
+function movePaddle(e) {
+  var tfm = 'translateY('+ (e.clientY - paddleHeight/2) +'px)';
+  e.target.style.MozTransform = tfm;
 }
 
 function setUpBoard() {
-  w.x = 0;
-  w.y = 0;
-  w.width = window.innerWidth;
-  w.height = window.innerHeight;
+  lp = document.getElementById('leftPaddle');
+  rp = document.getElementById('rightPaddle');
+  paddleHeight = lp.getBoundingClientRect().height;
+
+  lp.addEventListener('touchstart', movePaddle, false);
+  lp.addEventListener('touchmove', movePaddle, false);
+  lp.addEventListener('mousedown', movePaddle, false);
+  lp.addEventListener('mousemove', movePaddle, false);
+
+  rp.addEventListener('touchstart', movePaddle, false);
+  rp.addEventListener('touchmove', movePaddle, false);
+  rp.addEventListener('mousedown', movePaddle, false);
+  rp.addEventListener('mousemove', movePaddle, false);
 }
 
 window.onload = function() {
   setUpBoard();
-  raf(draw);
 };
 window.onresize = setUpBoard;
   </script>
@@ -86,9 +113,15 @@ window.onresize = setUpBoard;
 <body>
   <!-- This game wants to be in landscape.  If it's not, it might not
        be much fun.  Caveat emptor. -->
-  <div id="leftPaddle" class="paddle"></div>
+  <div id="leftGoalIndicator" class="goalIndicator"></div>
+  <div id="leftPaddleTrack" class="paddleTrack">
+    <div id="leftPaddle" class="paddle"></div>
+  </div>
   <div id="ball"></div>
-  <div id="rightPaddle" class="paddle"></div>
+  <div id="rightPaddleTrack" class="paddleTrack">
+    <div id="rightPaddle" class="paddle"></div>
+  </div>
+  <div id="rightGoalIndicator" class="goalIndicator"></div>
 </body>
 
 </html>
